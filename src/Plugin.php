@@ -6,7 +6,6 @@
 namespace Required\Deployer;
 
 use Composer\Composer;
-use Composer\Config;
 use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
@@ -35,11 +34,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 	protected $io;
 
 	/**
-	 * Vendor directory.
+	 * The root directory.
 	 *
 	 * @var string
 	 */
-	protected $vendorDir = 'vendor';
+	protected $rootDir = '';
 
 	/**
 	 * Package name of this plugin.
@@ -58,7 +57,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 
 		$config = $this->composer->getConfig();
 
-		$this->vendorDir = $config->get( 'vendor-dir', Config::RELATIVE_PATHS ) ?? $this->vendorDir;
+		$this->rootDir = dirname( $config->getConfigSource()->getName() );
 	}
 
 	/**
@@ -125,7 +124,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 		}
 
 		$source = dirname( __DIR__ ) . '/res/deploy.tpl.php';
-		$dest   = dirname( __DIR__ ) . '/deploy.php';
+		$dest   = $this->rootDir . '/deploy.php';
 
 		$copied = file_put_contents( $dest, file_get_contents( $source ) );
 
