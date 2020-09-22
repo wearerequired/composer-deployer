@@ -1,7 +1,6 @@
 # composer-deployer
-Composer Plugin to create a deployer config (deploy.php).
 
-A plugin for Composer to create the Deployer configuration file.
+A plugin for Composer to create the Deployer configuration file (deploy.php).
 
 ## Installation
 
@@ -13,4 +12,7 @@ composer require wearerequired/composer-deployer
 
 ## Features
 
-* Creates `deploy.php` in root level.
+* Creates `deploy.php` in root level
+  * This config deploys a project
+  * Executes WordPress translation installs/updates (via wp-cli)
+  * Executes a opcache clear command (via wp-cli) when activated
