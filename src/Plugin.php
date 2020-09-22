@@ -140,7 +140,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 	 *
 	 * @param \Composer\Installer\PackageEvent $event The current event.
 	 */
-	public function deleteWpConfig( PackageEvent $event ) {
+	public function deleteDeployerConfig( PackageEvent $event ) {
 		/** @var \Composer\DependencyResolver\Operation\UninstallOperation $operation */
 		$operation = $event->getOperation();
 		$package   = $operation->getPackage();
