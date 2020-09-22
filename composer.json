@@ -1,0 +1,43 @@
+{
+  "name": "wearerequired/composer-deployer",
+  "type": "composer-plugin",
+  "description": "A composer plugin to create a deployer configuration file.",
+  "keywords": [
+    "deployer",
+    "config"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "required",
+      "email": "info@required.com",
+      "homepage": "https://required.com",
+      "role": "Company"
+    },
+    {
+      "name": "Stefan Pasch",
+      "email": "stefan@required.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "composer-plugin-api": "^1.0 || ^2.0",
+    "oscarotero/env": "^2.1"
+  },
+  "require-dev": {
+    "composer/composer": "1.6.* || 2.0.*@dev",
+    "composer/semver": "^1 || ^3"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    },
+    "class": "Required\\Deployer\\Plugin"
+  },
+  "autoload": {
+    "psr-4": {
+      "Required\\Deployer\\": "src"
+    }
+  }
+}
