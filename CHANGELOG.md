@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - The deploy.tpl.php is copied now (before it was read and written to a new file).
+- Use correct path to deploy.php in uninstall event (path to the folder where the composer.json is located).
 
 ## [0.1.0] - 2020-09-22
 ### Added
