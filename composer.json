@@ -30,6 +30,9 @@
     "composer/composer": "1.6.* || 2.0.*@dev",
     "composer/semver": "^1 || ^3"
   },
+  "suggest": {
+    "deployer/dist": "The deployment tool to deploy."
+  },
   "extra": {
     "branch-alias": {
       "dev-master": "1.0-dev"
