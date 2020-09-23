@@ -126,7 +126,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 		$source = dirname( __DIR__ ) . '/res/deploy.tpl.php';
 		$dest   = $this->rootDir . '/deploy.php';
 
-		$copied = file_put_contents( $dest, file_get_contents( $source ) );
+		$copied = copy( $source, $dest );
 
 		if ( false !== $copied ) {
 			$this->io->writeError( '    deploy.php has been copied to ' . $dest . '.' );
