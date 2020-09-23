@@ -129,7 +129,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 		$copied = copy( $source, $dest );
 
 		if ( false !== $copied ) {
-			$this->io->writeError( '    deploy.php has been copied to ' . $dest . '.' );
+			$this->io->writeError( '    deploy.php has been copied.' );
 		} else {
 			$this->io->writeError( '<error>deploy.php could not be copied to ' . $dest . '.</error>' );
 		}
@@ -149,7 +149,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 			return;
 		}
 
-		$deployConfigFile = dirname( __DIR__ ) . '/deploy.php';
+		$deployConfigFile = $this->rootDir . '/deploy.php';
 
 		if ( is_file( $deployConfigFile ) ) {
 			unlink( $deployConfigFile );
