@@ -22,7 +22,9 @@
   ],
   "require": {
     "php": ">=7.1",
-    "composer-plugin-api": "^1.0 || ^2.0"
+    "composer-plugin-api": "^1.0 || ^2.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+    "wearerequired/coding-standards": "^1.5"
   },
   "require-dev": {
     "composer/composer": "1.6.* || 2.0.*@dev",
@@ -38,5 +40,11 @@
     "psr-4": {
       "Required\\Deployer\\": "src"
     }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "format": "vendor/bin/phpcbf --report-summary --report-source .",
+    "lint": "vendor/bin/phpcs --report-summary --report-source ."
   }
 }
