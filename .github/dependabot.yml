@@ -10,3 +10,13 @@ updates:
     reviewers:
       - "ocean90"
       - "derpaschi"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "04:00"
+      timezone: "Europe/Zurich"
+    open-pull-requests-limit: 10
+    reviewers:
+    - "ocean90"
+    - "derpaschi"
