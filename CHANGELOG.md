@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add task to run the WordPress database update procedure on deployment.
+
 ### Changed
 - Set `keep_releases` option `3` by default.
 

@@ -79,6 +79,20 @@ task(
 	}
 );
 
+desc( 'Runs the WordPress database update procedure' );
+task(
+	'wp:upgrade_db',
+	function () {
+		within(
+			'{{release_path}}',
+			function () {
+				$is_multisite = test( 'wp core is-installed --network' );
+				run( 'wp core update-db' . ( $is_multisite ? ' --network' : '' ) );
+			}
+		);
+	}
+);
+
 desc( 'Deploy your project' );
 task(
 	'deploy',
@@ -95,6 +109,7 @@ task(
 		'deploy:clear_paths',
 		'deploy:symlink',
 		'wp:opcache_clear',
+		'wp:upgrade_db',
 		'deploy:unlock',
 		'cleanup',
 		'success',
