@@ -79,7 +79,7 @@ task(
 	}
 );
 
-desc( 'Runs the WordPress database update procedure.' );
+desc( 'Runs the WordPress database update procedure' );
 task(
 	'wp:upgrade_db',
 	function () {
