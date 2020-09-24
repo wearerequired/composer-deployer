@@ -23,6 +23,7 @@ set(
 		);
 	}
 );
+set( 'keep_releases', 3 );
 
 // Load options and hosts from inventory.
 inventory( 'deploy.yml' );
