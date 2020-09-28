@@ -24,6 +24,7 @@ set(
 	}
 );
 set( 'keep_releases', 3 );
+set( 'wordpress', true );
 
 // Load options and hosts from inventory.
 inventory( 'deploy.yml' );
@@ -33,6 +34,10 @@ desc( 'Install WordPress translations' );
 task(
 	'wp:install_translations',
 	function () {
+		if ( ! has( 'wp_languages' ) ) {
+			return;
+		}
+
 		within(
 			'{{release_path}}',
 			function () {
@@ -49,6 +54,10 @@ desc( 'Update WordPress translations' );
 task(
 	'wp:update_translations',
 	function () {
+		if ( ! has( 'wp_languages' ) ) {
+			return;
+		}
+
 		within(
 			'{{release_path}}',
 			function () {
@@ -67,13 +76,15 @@ desc( 'Clear OPcache' );
 task(
 	'wp:opcache_clear',
 	function () {
+		if ( ! get( 'wp_clear_opcache' ) ) {
+			return;
+		}
+
 		within(
 			'{{release_path}}',
 			function () {
-				if ( get( 'wp_clear_opcache' ) ) {
-					run( 'wp plugin activate wp-cli-clear-opcache --quiet' );
-					run( 'wp opcache clear' );
-				}
+				run( 'wp plugin activate wp-cli-clear-opcache --quiet' );
+				run( 'wp opcache clear' );
 			}
 		);
 	}
@@ -83,6 +94,10 @@ desc( 'Runs the WordPress database update procedure' );
 task(
 	'wp:upgrade_db',
 	function () {
+		if ( ! get( 'wordpress' ) ) {
+			return;
+		}
+
 		within(
 			'{{release_path}}',
 			function () {
