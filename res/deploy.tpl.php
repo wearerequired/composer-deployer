@@ -76,7 +76,7 @@ desc( 'Clear OPcache' );
 task(
 	'wp:opcache_clear',
 	function () {
-		if ( ! get( 'wp_clear_opcache' ) ) {
+		if ( ! get( 'wp_clear_opcache', false ) ) {
 			return;
 		}
 
