@@ -83,8 +83,13 @@ task(
 		within(
 			'{{release_path}}',
 			function () {
-				run( 'wp plugin activate wp-cli-clear-opcache --quiet' );
-				run( 'wp opcache clear' );
+				$is_installed = test( 'wp plugin is-installed wp-cli-clear-opcache' );
+				if ( ! $is_installed ) {
+					writeln( '<comment>Skipped because wp-cli-clear-opcache is not installed.</comment>' );
+				} else {
+					run( 'wp plugin activate wp-cli-clear-opcache --quiet' );
+					run( 'wp opcache clear' );
+				}
 			}
 		);
 	}
