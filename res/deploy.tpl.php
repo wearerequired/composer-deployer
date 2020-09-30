@@ -34,7 +34,7 @@ desc( 'Install WordPress translations' );
 task(
 	'wp:install_translations',
 	function () {
-		if ( ! has( 'wp_languages' ) ) {
+		if ( ! get( 'wordpress' ) || ! has( 'wp_languages' ) ) {
 			return;
 		}
 
@@ -54,7 +54,7 @@ desc( 'Update WordPress translations' );
 task(
 	'wp:update_translations',
 	function () {
-		if ( ! has( 'wp_languages' ) ) {
+		if ( ! get( 'wordpress' ) || ! has( 'wp_languages' ) ) {
 			return;
 		}
 
@@ -76,7 +76,7 @@ desc( 'Clear OPcache' );
 task(
 	'wp:opcache_clear',
 	function () {
-		if ( ! get( 'wp_clear_opcache', false ) ) {
+		if ( ! get( 'wordpress' ) || ! get( 'wp_clear_opcache', false ) ) {
 			return;
 		}
 
