@@ -103,13 +103,17 @@ task(
 			return;
 		}
 
-		within(
-			'{{release_path}}',
-			function () {
-				$is_multisite = test( 'wp core is-installed --network' );
-				run( 'wp core update-db' . ( $is_multisite ? ' --network' : '' ) );
-			}
-		);
+		try {
+			within(
+				'{{release_path}}',
+				function () {
+					$is_multisite = test( 'wp core is-installed --network' );
+					run( 'wp core update-db' . ( $is_multisite ? ' --network' : '' ) );
+				}
+			);
+		} catch ( \Throwable $t ) {
+			writeln( '<error>WordPress database could not be updated. Run manually via wp-admin/upgrade.php if necessary.</error>' );
+		}
 	}
 );
 
