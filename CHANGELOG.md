@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2020-10-09
+
+### Changed
+- Allow the `wp:upgrade_db` task to fail gracefully.
+
 ## [0.3.1] - 2020-10-03
 
 ### Fixed
@@ -41,7 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - The initial version of this composer plugin.
 
-[Unreleased]: https://github.com/wearerequired/composer-deployer/compare/0.3.1...HEAD
+[Unreleased]: https://github.com/wearerequired/composer-deployer/compare/0.3.2...HEAD
+[0.3.2]: https://github.com/wearerequired/composer-deployer/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/wearerequired/composer-deployer/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/wearerequired/composer-deployer/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/wearerequired/composer-deployer/compare/0.1.2...0.2.0
