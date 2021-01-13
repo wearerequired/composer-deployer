@@ -25,9 +25,12 @@ set(
 );
 set( 'keep_releases', 3 );
 set( 'wordpress', true );
-set( 'bin/wp', function () {
-	return locateBinaryPath( 'wp' );
-} );
+set(
+	'bin/wp',
+	function () {
+		return locateBinaryPath( 'wp' );
+	}
+);
 
 // Load options and hosts from inventory.
 inventory( 'deploy.yml' );
