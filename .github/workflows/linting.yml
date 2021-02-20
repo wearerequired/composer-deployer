@@ -32,7 +32,7 @@ jobs:
       - name: Install PHP dependencies
         run: |
           composer i
-          echo "::add-path::vendor/bin"
+          echo "${PWD}/vendor/bin" >> $GITHUB_PATH
 
       - name: Run linters
         uses: wearerequired/lint-action@v1

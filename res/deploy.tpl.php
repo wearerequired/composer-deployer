@@ -25,6 +25,12 @@ set(
 );
 set( 'keep_releases', 3 );
 set( 'wordpress', true );
+set(
+	'bin/wp',
+	function () {
+		return locateBinaryPath( 'wp' );
+	}
+);
 
 // Load options and hosts from inventory.
 inventory( 'deploy.yml' );
@@ -42,9 +48,9 @@ task(
 			'{{release_path}}',
 			function () {
 				$wp_languages = implode( ' ', get( 'wp_languages' ) );
-				run( "wp language core install {$wp_languages} --skip-plugins=wordpress-seo" );
-				run( "wp language plugin install --all {$wp_languages} --format=csv --skip-plugins=wordpress-seo" );
-				run( "wp language theme install --all {$wp_languages} --format=csv --skip-plugins=wordpress-seo" );
+				run( "{{bin/wp}} language core install {$wp_languages} --skip-plugins=wordpress-seo" );
+				run( "{{bin/wp}} language plugin install --all {$wp_languages} --format=csv --skip-plugins=wordpress-seo" );
+				run( "{{bin/wp}} language theme install --all {$wp_languages} --format=csv --skip-plugins=wordpress-seo" );
 			}
 		);
 	}
@@ -61,9 +67,9 @@ task(
 		within(
 			'{{release_path}}',
 			function () {
-				run( 'wp language core update --quiet' );
-				run( 'wp language plugin update --all --quiet' );
-				run( 'wp language theme update --all --quiet' );
+				run( '{{bin/wp}} language core update --quiet' );
+				run( '{{bin/wp}} language plugin update --all --quiet' );
+				run( '{{bin/wp}} language theme update --all --quiet' );
 			}
 		);
 	}
@@ -83,12 +89,12 @@ task(
 		within(
 			'{{release_path}}',
 			function () {
-				$is_installed = test( 'wp plugin is-installed wp-cli-clear-opcache' );
+				$is_installed = test( '{{bin/wp}} plugin is-installed wp-cli-clear-opcache' );
 				if ( ! $is_installed ) {
 					writeln( '<comment>Skipped because wp-cli-clear-opcache is not installed.</comment>' );
 				} else {
-					run( 'wp plugin activate wp-cli-clear-opcache --quiet' );
-					run( 'wp opcache clear' );
+					run( '{{bin/wp}} plugin activate wp-cli-clear-opcache --quiet' );
+					run( '{{bin/wp}} opcache clear' );
 				}
 			}
 		);
@@ -107,8 +113,8 @@ task(
 			within(
 				'{{release_path}}',
 				function () {
-					$is_multisite = test( 'wp core is-installed --network' );
-					run( 'wp core update-db' . ( $is_multisite ? ' --network' : '' ) );
+					$is_multisite = test( '{{bin/wp}} core is-installed --network' );
+					run( '{{bin/wp}} core update-db' . ( $is_multisite ? ' --network' : '' ) );
 				}
 			);
 		} catch ( \Throwable $t ) {
