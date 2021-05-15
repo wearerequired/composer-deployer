@@ -51,7 +51,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 	 * @param \Composer\Composer       $composer Composer.
 	 * @param \Composer\IO\IOInterface $io       Input/Output helper interface.
 	 */
-	public function activate( Composer $composer, IOInterface $io ) {
+	public function activate( Composer $composer, IOInterface $io ): void {
 		$this->composer = $composer;
 		$this->io       = $io;
 
@@ -70,7 +70,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 	 * @param \Composer\Composer       $composer Composer.
 	 * @param \Composer\IO\IOInterface $io       Input/Output helper interface.
 	 */
-	public function deactivate( Composer $composer, IOInterface $io ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function deactivate( Composer $composer, IOInterface $io ): void { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 	}
 
 	/**
@@ -81,15 +81,15 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 	 * @param \Composer\Composer       $composer Composer.
 	 * @param \Composer\IO\IOInterface $io       Input/Output helper interface.
 	 */
-	public function uninstall( Composer $composer, IOInterface $io ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function uninstall( Composer $composer, IOInterface $io ): void { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 	}
 
 	/**
 	 * Subscribes to package update/install/uninstall events.
 	 *
-	 * @return array Subscribed events.
+	 * @return array<string,mixed> Subscribed events.
 	 */
-	public static function getSubscribedEvents() {
+	public static function getSubscribedEvents(): array {
 		return [
 			PackageEvents::POST_PACKAGE_INSTALL   => [
 				[ 'copyDeployerConfig' ],
@@ -108,7 +108,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 	 *
 	 * @param \Composer\Installer\PackageEvent $event The current event.
 	 */
-	public function copyDeployerConfig( PackageEvent $event ) {
+	public function copyDeployerConfig( PackageEvent $event ): void {
 		$operation = $event->getOperation();
 
 		if ( $operation instanceof InstallOperation ) {
@@ -140,7 +140,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 	 *
 	 * @param \Composer\Installer\PackageEvent $event The current event.
 	 */
-	public function deleteDeployerConfig( PackageEvent $event ) {
+	public function deleteDeployerConfig( PackageEvent $event ): void {
 		/** @var \Composer\DependencyResolver\Operation\UninstallOperation $operation */
 		$operation = $event->getOperation();
 		$package   = $operation->getPackage();
