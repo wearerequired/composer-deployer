@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Require PHP 7.4.
 * Require Composer v2.
 
+### Added
+- Add support for custom path to WP-CLI binary.
+
 ## [0.3.2] - 2020-10-09
 
 ### Changed
