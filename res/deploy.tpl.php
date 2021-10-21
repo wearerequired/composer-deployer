@@ -34,6 +34,35 @@ set(
 inventory( 'deploy.yml' );
 
 // Tasks.
+desc( 'Check WordPress is installed' );
+task(
+	'wp:maybe_installed',
+	function (): void {
+		if ( ! get( 'wordpress' ) ) {
+			return;
+		}
+
+		within(
+			'{{release_path}}',
+			function (): void {
+				$is_installed = test( '{{bin/wp}} core is-installed' );
+				if ( $is_installed ) {
+					return;
+				}
+				writeln( '<comment>Installing WordPress</comment>' );
+				$url          = run( 'set -o allexport; source wordpress/.env; set +o allexport; echo $_HTTP_HOST' );
+				$is_multisite = run( 'set -o allexport; source wordpress/.env; set +o allexport; echo $MULTISITE' );
+				if ( $is_multisite ) {
+					run( "{{bin/wp}} core multisite-install --url=https://{$url} --title='New Install' --admin_user=required --admin_email=info@required.ch --skip-email --skip-config" );
+				} else {
+
+					run( "{{bin/wp}} core install --url=https://{$url} --title='New Install' --admin_user=required --admin_email=info@required.ch --skip-email" );
+				}
+			}
+		);
+	}
+);
+
 desc( 'Install WordPress translations' );
 task(
 	'wp:install_translations',
@@ -133,6 +162,7 @@ task(
 		'deploy:shared',
 		'deploy:writable',
 		'deploy:vendors',
+		'wp:maybe_installed',
 		'wp:translations',
 		'deploy:clear_paths',
 		'deploy:symlink',
