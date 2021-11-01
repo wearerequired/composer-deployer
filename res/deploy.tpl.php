@@ -50,7 +50,7 @@ task(
 					return;
 				}
 				writeln( '<comment>Installing WordPress</comment>' );
-				$env = run( 'set -o allexport; source wordpress/.env; set +o allexport; echo "https://$_HTTP_HOST,$MULTISITE"' );
+				$env                    = run( 'set -o allexport; source wordpress/.env; set +o allexport; echo "https://$_HTTP_HOST,$MULTISITE"' );
 				[ $url, $is_multisite ] = explode( ',', $env );
 				if ( $is_multisite ) {
 					run( "{{bin/wp}} core multisite-install --url={$url} --title=WordPress --admin_user=required --admin_email=info@required.ch --skip-email --skip-config" );
