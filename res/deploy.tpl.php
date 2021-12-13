@@ -149,15 +149,15 @@ task(
 	}
 );
 
-desc( 'Run WP-CLI commands before finishing the deployment' );
+desc( 'Run commands before finishing the deployment' );
 task(
 	'wp:post_rollout',
 	function (): void {
-		if ( ! get( 'wordpress' ) || ! has( 'post_rollout_wp_cli_commands' ) ) {
+		if ( ! has( 'post_rollout_commands' ) ) {
 			return;
 		}
 
-		$commands = get( 'post_rollout_wp_cli_commands' );
+		$commands = get( 'post_rollout_commands' );
 		if ( ! \is_array( $commands ) ) {
 			$commands = [ $commands ];
 		}
@@ -166,7 +166,7 @@ task(
 			'{{release_path}}',
 			function () use ( $commands ): void {
 				foreach ( $commands as $command ) {
-					run( "{{bin/wp}} {$command}" );
+					run( $command );
 				}
 			}
 		);
