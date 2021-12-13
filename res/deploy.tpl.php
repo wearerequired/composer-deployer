@@ -149,6 +149,30 @@ task(
 	}
 );
 
+desc( 'Run WP-CLI commands before finishing the deployment' );
+task(
+	'wp:post_rollout',
+	function (): void {
+		if ( ! get( 'wordpress' ) || ! has( 'post_rollout_wp_cli_commands' ) ) {
+			return;
+		}
+
+		$commands = get( 'post_rollout_wp_cli_commands' );
+		if ( ! \is_array( $commands ) ) {
+			$commands = [ $commands ];
+		}
+
+		within(
+			'{{release_path}}',
+			function () use ( $commands ): void {
+				foreach ( $commands as $command ) {
+					run( "{{bin/wp}} {$command}" );
+				}
+			}
+		);
+	}
+);
+
 desc( 'Deploy your project' );
 task(
 	'deploy',
@@ -167,6 +191,7 @@ task(
 		'deploy:symlink',
 		'wp:opcache_clear',
 		'wp:upgrade_db',
+		'wp:post_rollout',
 		'deploy:unlock',
 		'cleanup',
 		'success',
