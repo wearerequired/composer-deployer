@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+* Add `wp:post_rollout` task and `post_rollout_commands` option to run custom commands before finishing the deployment.
+
 ## [0.5.0] - 2021-11-02
 
 ### Added

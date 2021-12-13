@@ -17,3 +17,4 @@ composer require wearerequired/composer-deployer
 * Installs and updates WordPress translations via WP-CLI if `wp_languages` option is set.
 * Clears OPcache via WP-CLI (requires [WP-CLI Clear OPcache](https://github.com/wearerequired/wp-cli-clear-opcache)). Can be disabled via `wp_clear_opcache` option.
 * Runs WordPress database routine if `wordpress` option is set.
+* Run custom commands via `post_rollout_commands` option before the deployment is finished.
