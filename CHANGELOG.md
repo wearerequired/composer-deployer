@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.6.0] - 2021-11-02
 
 ### Added
 * Add `wp:post_rollout` task and `post_rollout_commands` option to run custom commands before finishing the deployment.
@@ -66,7 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - The initial version of this composer plugin.
 
-[Unreleased]: https://github.com/wearerequired/composer-deployer/compare/0.5.0...HEAD
+[Unreleased]: https://github.com/wearerequired/composer-deployer/compare/0.6.0...HEAD
+[0.6.0]: https://github.com/wearerequired/composer-deployer/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/wearerequired/composer-deployer/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/wearerequired/composer-deployer/compare/0.3.2...0.4.0
 [0.3.2]: https://github.com/wearerequired/composer-deployer/compare/0.3.1...0.3.2
