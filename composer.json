@@ -1,12 +1,12 @@
 {
   "name": "wearerequired/composer-deployer",
-  "type": "composer-plugin",
   "description": "A composer plugin to create a deployer configuration file.",
+  "license": "MIT",
+  "type": "composer-plugin",
   "keywords": [
     "deployer",
     "config"
   ],
-  "license": "MIT",
   "authors": [
     {
       "name": "required",
@@ -34,19 +34,24 @@
   "suggest": {
     "deployer/dist": "The deployment tool to deploy."
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Required\\Deployer\\": "src"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
   "extra": {
     "branch-alias": {
       "dev-master": "0.6.x-dev"
     },
     "class": "Required\\Deployer\\Plugin"
   },
-  "autoload": {
-    "psr-4": {
-      "Required\\Deployer\\": "src"
-    }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "scripts": {
     "format": "vendor/bin/phpcbf --report-summary --report-source .",
     "lint": "vendor/bin/phpcs --report-summary --report-source ."
