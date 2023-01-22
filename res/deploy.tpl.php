@@ -29,7 +29,7 @@ set(
 );
 
 // Load options and hosts from inventory.
-inventory( 'deploy.yml' );
+import( 'deploy.yml' );
 
 // Tasks.
 desc( 'Check WordPress is installed' );
