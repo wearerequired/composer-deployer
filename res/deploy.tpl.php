@@ -191,8 +191,8 @@ task(
 		'wp:upgrade_db',
 		'wp:post_rollout',
 		'deploy:unlock',
-		'cleanup',
-		'success',
+		'deploy:cleanup',
+		'deploy:success',
 	]
 );
 
