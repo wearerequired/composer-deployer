@@ -25,7 +25,7 @@ set( 'keep_releases', 3 );
 set( 'wordpress', true );
 set(
 	'bin/wp',
-	fn(): string => locateBinaryPath( 'wp' )
+	fn(): string => which( 'wp' )
 );
 
 // Load options and hosts from inventory.
