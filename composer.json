@@ -31,9 +31,6 @@
     "deployer/deployer": "^7.1",
     "wearerequired/coding-standards": "^3.0"
   },
-  "suggest": {
-    "deployer/dist": "The deployment tool to deploy."
-  },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "autoload": {
