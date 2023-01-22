@@ -11,8 +11,6 @@ namespace Deployer;
 require 'recipe/common.php';
 
 // Default options.
-set( 'allow_anonymous_stats', false );
-set( 'default_stage', 'staging' );
 set(
 	'composer_options',
 	function () {
