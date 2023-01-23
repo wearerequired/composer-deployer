@@ -27,6 +27,7 @@ set(
 	'bin/wp',
 	fn(): string => which( 'wp' )
 );
+set( 'git_ssh_command', 'ssh' );
 
 // Load options and hosts from inventory.
 import( 'deploy.yml' );
