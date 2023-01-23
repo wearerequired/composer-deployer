@@ -16,7 +16,7 @@ set(
 	function () {
 		$production = 'production' === get( 'stage' );
 		return sprintf(
-			'{{composer_action}} --verbose --prefer-dist --no-progress --no-interaction %s --optimize-autoloader',
+			'--verbose --prefer-dist --no-progress --no-interaction %s --optimize-autoloader',
 			$production ? '--no-dev' : ''
 		);
 	}
