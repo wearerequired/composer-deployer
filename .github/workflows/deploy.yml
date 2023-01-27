@@ -169,15 +169,23 @@ jobs:
       - name: Deploy via Deployer
         working-directory: ${{ inputs.project_working_directory }}
         run: |
-          deployer deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction
+          if [[ "$ACTIONS_STEP_DEBUG" == "true" ]]; then
+            deployer deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction -vvv
+          else
+            deployer deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction
+          fi
 
       - name: Unlock Deployer
         working-directory: ${{ inputs.project_working_directory }}
         if: ${{ cancelled() }}
         run: |
           if hash deployer 2>/dev/null; then
-            deployer deploy:unlock stage=$ENVIRONMENT
-          fi;
+            if [[ "$ACTIONS_STEP_DEBUG" == "true" ]]; then
+              deployer deploy:unlock stage=$ENVIRONMENT --no-interaction -vvv
+            else
+              deployer deploy:unlock stage=$ENVIRONMENT --no-interaction
+            fi
+          fi
 
       - name: Update custom environment variables
         if: ${{ always() }}
