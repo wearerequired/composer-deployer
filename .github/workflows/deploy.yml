@@ -31,6 +31,9 @@ jobs:
         shell: bash
 
     steps:
+      - name: Update locale
+        run: sudo update-locale LANG=en_US.utf8
+
       - name: Set custom environment variables
         run: |
           TIMESTAMP=$(date +'%s')
@@ -169,7 +172,6 @@ jobs:
       - name: Deploy via Deployer
         working-directory: ${{ inputs.project_working_directory }}
         run: |
-          LANG="en_US.UTF-8"
           if [ -n "${RUNNER_DEBUG+1}" ]; then
             deployer deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction -vvv
           else
@@ -180,7 +182,6 @@ jobs:
         working-directory: ${{ inputs.project_working_directory }}
         if: ${{ cancelled() }}
         run: |
-          LANG="en_US.UTF-8"
           if hash deployer 2>/dev/null; then
             if [ -n "${RUNNER_DEBUG+1}" ]; then
               deployer deploy:unlock stage=$ENVIRONMENT --no-interaction -vvv
