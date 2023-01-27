@@ -28,11 +28,8 @@
     "composer/composer": "^2.0",
     "composer/semver": "^3.0",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-    "deployer/deployer": "^6.8",
+    "deployer/deployer": "^7.1",
     "wearerequired/coding-standards": "^3.0"
-  },
-  "suggest": {
-    "deployer/dist": "The deployment tool to deploy."
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

@@ -11,14 +11,12 @@ namespace Deployer;
 require 'recipe/common.php';
 
 // Default options.
-set( 'allow_anonymous_stats', false );
-set( 'default_stage', 'staging' );
 set(
 	'composer_options',
 	function () {
 		$production = 'production' === get( 'stage' );
 		return sprintf(
-			'{{composer_action}} --verbose --prefer-dist --no-progress --no-interaction %s --optimize-autoloader',
+			'--verbose --prefer-dist --no-progress --no-interaction %s --optimize-autoloader',
 			$production ? '--no-dev' : ''
 		);
 	}
@@ -27,11 +25,23 @@ set( 'keep_releases', 3 );
 set( 'wordpress', true );
 set(
 	'bin/wp',
-	fn(): string => locateBinaryPath( 'wp' )
+	fn(): string => which( 'wp' )
+);
+set( 'git_ssh_command', 'ssh' );
+set(
+	'stage',
+	function (): string {
+		$labels = get( 'labels', [] );
+		if ( isset( $labels['stage'] ) ) {
+			return $labels['stage'];
+		}
+
+		throw new \Deployer\Exception\ConfigurationException( 'Please specify `labels.stage`.' );
+	}
 );
 
 // Load options and hosts from inventory.
-inventory( 'deploy.yml' );
+import( 'deploy.yml' );
 
 // Tasks.
 desc( 'Check WordPress is installed' );
@@ -43,7 +53,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function (): void {
 				$is_installed = test( '{{bin/wp}} core is-installed' );
 				if ( $is_installed ) {
@@ -71,7 +81,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function (): void {
 				$wp_languages = implode( ' ', get( 'wp_languages' ) );
 				run( "{{bin/wp}} language core install {$wp_languages} --skip-plugins=wordpress-seo" );
@@ -91,7 +101,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function (): void {
 				run( '{{bin/wp}} language core update --quiet' );
 				run( '{{bin/wp}} language plugin update --all --quiet' );
@@ -113,7 +123,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function (): void {
 				$is_installed = test( '{{bin/wp}} plugin is-installed wp-cli-clear-opcache' );
 				if ( ! $is_installed ) {
@@ -137,7 +147,7 @@ task(
 
 		try {
 			within(
-				'{{release_path}}',
+				'{{release_or_current_path}}',
 				function (): void {
 					$is_multisite = test( '{{bin/wp}} core is-installed --network' );
 					run( '{{bin/wp}} core update-db' . ( $is_multisite ? ' --network' : '' ) );
@@ -163,7 +173,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function () use ( $commands ): void {
 				foreach ( $commands as $command ) {
 					run( $command );
@@ -177,13 +187,7 @@ desc( 'Deploy your project' );
 task(
 	'deploy',
 	[
-		'deploy:info',
 		'deploy:prepare',
-		'deploy:lock',
-		'deploy:release',
-		'deploy:update_code',
-		'deploy:shared',
-		'deploy:writable',
 		'deploy:vendors',
 		'wp:install',
 		'wp:translations',
@@ -193,8 +197,8 @@ task(
 		'wp:upgrade_db',
 		'wp:post_rollout',
 		'deploy:unlock',
-		'cleanup',
-		'success',
+		'deploy:cleanup',
+		'deploy:success',
 	]
 );
 
