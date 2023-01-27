@@ -31,6 +31,10 @@ jobs:
         shell: bash
 
     steps:
+      - name: Check env
+        run: |
+          printenv
+
       - name: Set custom environment variables
         run: |
           TIMESTAMP=$(date +'%s')
