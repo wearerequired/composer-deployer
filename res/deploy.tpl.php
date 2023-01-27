@@ -28,6 +28,17 @@ set(
 	fn(): string => which( 'wp' )
 );
 set( 'git_ssh_command', 'ssh' );
+set(
+	'stage',
+	function (): string {
+		$labels = get( 'labels', [] );
+		if ( isset( $labels['stage'] ) ) {
+			return $labels['stage'];
+		}
+
+		throw new \Deployer\Exception\ConfigurationException( 'Please specify `labels.stage`.' );
+	}
+);
 
 // Load options and hosts from inventory.
 import( 'deploy.yml' );
