@@ -26,14 +26,13 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    env:
+      LANG: en_US.utf8
     defaults:
       run:
         shell: bash
 
     steps:
-      - name: Update locale
-        run: sudo update-locale LANG=en_US.utf8
-
       - name: Set custom environment variables
         run: |
           TIMESTAMP=$(date +'%s')
