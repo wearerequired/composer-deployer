@@ -42,7 +42,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function (): void {
 				$is_installed = test( '{{bin/wp}} core is-installed' );
 				if ( $is_installed ) {
@@ -70,7 +70,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function (): void {
 				$wp_languages = implode( ' ', get( 'wp_languages' ) );
 				run( "{{bin/wp}} language core install {$wp_languages} --skip-plugins=wordpress-seo" );
@@ -90,7 +90,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function (): void {
 				run( '{{bin/wp}} language core update --quiet' );
 				run( '{{bin/wp}} language plugin update --all --quiet' );
@@ -112,7 +112,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function (): void {
 				$is_installed = test( '{{bin/wp}} plugin is-installed wp-cli-clear-opcache' );
 				if ( ! $is_installed ) {
@@ -136,7 +136,7 @@ task(
 
 		try {
 			within(
-				'{{release_path}}',
+				'{{release_or_current_path}}',
 				function (): void {
 					$is_multisite = test( '{{bin/wp}} core is-installed --network' );
 					run( '{{bin/wp}} core update-db' . ( $is_multisite ? ' --network' : '' ) );
@@ -162,7 +162,7 @@ task(
 		}
 
 		within(
-			'{{release_path}}',
+			'{{release_or_current_path}}',
 			function () use ( $commands ): void {
 				foreach ( $commands as $command ) {
 					run( $command );
