@@ -31,10 +31,6 @@ jobs:
         shell: bash
 
     steps:
-      - name: Check env
-        run: |
-          printenv
-
       - name: Set custom environment variables
         run: |
           TIMESTAMP=$(date +'%s')
@@ -173,7 +169,7 @@ jobs:
       - name: Deploy via Deployer
         working-directory: ${{ inputs.project_working_directory }}
         run: |
-          if [[ "$RUNNER_DEBUG" == "true" ]]; then
+          if [ -n "${RUNNER_DEBUG+1}" ]; then
             deployer deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction -vvv
           else
             deployer deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction
@@ -184,7 +180,7 @@ jobs:
         if: ${{ cancelled() }}
         run: |
           if hash deployer 2>/dev/null; then
-            if [[ "$RUNNER_DEBUG" == "true" ]]; then
+            if [ -n "${RUNNER_DEBUG+1}" ]; then
               deployer deploy:unlock stage=$ENVIRONMENT --no-interaction -vvv
             else
               deployer deploy:unlock stage=$ENVIRONMENT --no-interaction
