@@ -102,7 +102,7 @@ jobs:
       - name: Set up PHP and Deployer
         uses: shivammathur/setup-php@d30ad8b1843ace22e6698ab99bbafaa747b6bd0d # v2.24.0
         with:
-          php-version: "8.1"
+          php-version: "8.2"
           coverage: none
           tools: deployer:7.1.3
 
