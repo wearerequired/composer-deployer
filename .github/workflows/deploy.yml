@@ -63,13 +63,13 @@ jobs:
             {
               "icon_emoji": ":rocket:",
               "username": "Deployer",
+              "text": "Deployment initialized.",
               "attachments": [
                 {
                   "author_name": "${{ github.event.sender.login }}",
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
                   "color": "warning",
-                  "text": "Deployment initialized.",
                   "actions": [
                       {
                         "type": "button",
@@ -134,13 +134,13 @@ jobs:
             {
               "icon_emoji": ":rocket:",
               "username": "Deployer",
+              "text": "Deployment started.",
               "attachments": [
                 {
                   "author_name": "${{ github.event.sender.login }}",
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
                   "color": "warning",
-                  "text": "Deployment started.",
                   "fields": [
                     {
                       "title": "Environment",
@@ -202,13 +202,13 @@ jobs:
             {
               "icon_emoji": ":rocket:",
               "username": "Deployer",
+              "text": "Deployment finished.",
               "attachments": [
                 {
                   "author_name": "${{ github.event.sender.login }}",
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
                   "color": "good",
-                  "text": "Deployment finished.",
                   "fields": [
                     {
                       "title": "Environment",
@@ -245,13 +245,13 @@ jobs:
             {
               "icon_emoji": ":boom:",
               "username": "Deployer",
+              "text": "Deployment failed.",
               "attachments": [
                 {
                   "author_name": "${{ github.event.sender.login }}",
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
                   "color": "danger",
-                  "text": "Deployment failed.",
                   "fields": [
                     {
                       "title": "Environment",
@@ -288,12 +288,12 @@ jobs:
             {
               "icon_emoji": ":rocket:",
               "username": "Deployer",
+              "text": "Deployment cancelled.",
               "attachments": [
                 {
                   "author_name": "${{ github.event.sender.login }}",
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
-                  "text": "Deployment cancelled.",
                   "actions": [
                       {
                         "type": "button",
