@@ -1,5 +1,9 @@
 # composer-deployer
 
+[![Latest Stable Version](https://poser.pugx.org/wearerequired/composer-deployer/v/stable)](https://packagist.org/packages/wearerequired/composer-deployer)
+[![Latest Unstable Version](https://poser.pugx.org/wearerequired/composer-deployer/v/unstable)](https://packagist.org/packages/wearerequired/composer-deployer)
+
+
 A plugin for Composer to create the Deployer configuration file (deploy.php).
 
 ## Installation
@@ -60,3 +64,7 @@ hosts:
     labels:
       stage: production
 ```
+
+<br>
+
+[![a required open source product - let's get in touch](https://media.required.com/images/open-source-banner.png)](https://required.com/en/lets-get-in-touch/)
