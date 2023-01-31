@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Update `deploy.php` template to support Deployer v7. v6 is no longer supported.  
+  To migrate from v6 to v7 see [Deployer's upgrade documentation](https://deployer.org/docs/7.x/UPGRADE#upgrade-from-6x-to-7x).
+- Add [reusable workflow](./github/workflows/deploy.yml) for GitHub which can be used for deployments.
+
 ## [0.6.0] - 2021-11-02
 
 ### Added
