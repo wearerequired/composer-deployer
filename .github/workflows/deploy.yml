@@ -69,8 +69,7 @@ jobs:
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
                   "color": "warning",
-                  "fallback": "Deployment initialized.",
-                  "pretext": "Deployment initialized.",
+                  "text": "Deployment initialized.",
                   "actions": [
                       {
                         "type": "button",
@@ -141,8 +140,7 @@ jobs:
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
                   "color": "warning",
-                  "fallback": "Deployment started.",
-                  "pretext": "Deployment started.",
+                  "text": "Deployment started.",
                   "fields": [
                     {
                       "title": "Environment",
@@ -210,8 +208,7 @@ jobs:
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
                   "color": "good",
-                  "fallback": "Deployment finished.",
-                  "pretext": "Deployment finished.",
+                  "text": "Deployment finished.",
                   "fields": [
                     {
                       "title": "Environment",
@@ -254,8 +251,7 @@ jobs:
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
                   "color": "danger",
-                  "fallback": "Deployment failed.",
-                  "pretext": "Deployment failed.",
+                  "text": "Deployment failed.",
                   "fields": [
                     {
                       "title": "Environment",
@@ -297,8 +293,7 @@ jobs:
                   "author_name": "${{ github.event.sender.login }}",
                   "author_link": "${{ github.event.sender.html_url }}",
                   "author_icon": "${{ github.event.sender.avatar_url }}",
-                  "fallback": "Deployment cancelled.",
-                  "pretext": "Deployment cancelled.",
+                  "text": "Deployment cancelled.",
                   "actions": [
                       {
                         "type": "button",
