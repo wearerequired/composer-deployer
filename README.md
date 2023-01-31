@@ -23,7 +23,7 @@ composer require wearerequired/composer-deployer
 * Clears OPcache via WP-CLI (requires [WP-CLI Clear OPcache](https://github.com/wearerequired/wp-cli-clear-opcache)). Can be disabled via `wp_clear_opcache` option.
 * Runs WordPress database routine if `wordpress` option is set.
 * Runs custom commands via `post_rollout_commands` option before the deployment is finished.
-* Provides a [reusable workflow for GitHub](./github/workflows/deploy.yml) for deployment.
+* Provides a [reusable workflow for GitHub](./.github/workflows/deploy.yml) for deployment.
 
 ## Configuration
 
