@@ -104,7 +104,7 @@ jobs:
         with:
           php-version: "8.2"
           coverage: none
-          tools: deployer:7.1.4
+          tools: deployer:7.3.3
 
       - name: Set up SSH
         run: |
