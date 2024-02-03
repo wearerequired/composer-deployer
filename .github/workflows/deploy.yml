@@ -99,12 +99,16 @@ jobs:
           persist-credentials: false
           path: ${{ inputs.project_working_directory }}
 
-      - name: Set up PHP and Deployer
+      - name: Set up PHP
         uses: shivammathur/setup-php@6d7209f44a25a59e904b1ee9f3b0c33ab2cd888d # v2.29.0
         with:
           php-version: "8.2"
           coverage: none
-          tools: deployer:7.1.4
+
+      - name: Set up Deployer
+        run: |
+          composer global require deployer/deployer:v7.3.3
+          echo "$(composer global config bin-dir --absolute --quiet)" >> $GITHUB_PATH
 
       - name: Set up SSH
         run: |
@@ -170,20 +174,20 @@ jobs:
         working-directory: ${{ inputs.project_working_directory }}
         run: |
           if [ -n "${RUNNER_DEBUG+1}" ]; then
-            deployer deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction -vvv
+            dep deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction -vvv
           else
-            deployer deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction
+            dep deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction
           fi
 
       - name: Unlock Deployer
         working-directory: ${{ inputs.project_working_directory }}
         if: ${{ cancelled() }}
         run: |
-          if hash deployer 2>/dev/null; then
+          if hash dep 2>/dev/null; then
             if [ -n "${RUNNER_DEBUG+1}" ]; then
-              deployer deploy:unlock stage=$ENVIRONMENT --no-interaction -vvv
+              dep deploy:unlock stage=$ENVIRONMENT --no-interaction -vvv
             else
-              deployer deploy:unlock stage=$ENVIRONMENT --no-interaction
+              dep deploy:unlock stage=$ENVIRONMENT --no-interaction
             fi
           fi
 
