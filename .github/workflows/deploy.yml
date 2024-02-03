@@ -107,7 +107,7 @@ jobs:
 
       - name: Set up Deployer
         run: |
-          composer global require deployer/deployer@v7.3.3
+          composer global require deployer/deployer:v7.3.3
           echo "$(composer global config bin-dir --absolute --quiet)" >> $GITHUB_PATH
 
       - name: Set up SSH
