@@ -29,7 +29,7 @@
     "composer/semver": "^3.0",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7 || ^1.0",
     "deployer/deployer": "^7.3",
-    "wearerequired/coding-standards": "^5.0"
+    "wearerequired/coding-standards": "^6.0"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
