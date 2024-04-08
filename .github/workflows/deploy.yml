@@ -85,7 +85,7 @@ jobs:
 
       - name: Set GitHub deployment status
         if: ${{ github.event_name != 'deployment' }}
-        uses: bobheadxi/deployments@88ce5600046c82542f8246ac287d0a53c461bca3 # v1.4.0
+        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
         id: deployment
         with:
           step: start
@@ -312,7 +312,7 @@ jobs:
             }
 
       - name: Update GitHub deployment status (deployment event)
-        uses: bobheadxi/deployments@88ce5600046c82542f8246ac287d0a53c461bca3 # v1.4.0
+        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
         if: ${{ github.event_name == 'deployment' && always() }}
         with:
           step: finish
@@ -323,7 +323,7 @@ jobs:
           deployment_id: ${{ github.event.deployment.id }}
 
       - name: Update GitHub deployment status (push event)
-        uses: bobheadxi/deployments@88ce5600046c82542f8246ac287d0a53c461bca3 # v1.4.0
+        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
         if: ${{ github.event_name != 'deployment' && always() }}
         with:
           step: finish
