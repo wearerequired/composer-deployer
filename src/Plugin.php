@@ -57,7 +57,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 
 		$config = $this->composer->getConfig();
 
-		$this->rootDir = dirname( $config->getConfigSource()->getName() );
+		$this->rootDir = \dirname( $config->getConfigSource()->getName() );
 	}
 
 	/**
@@ -116,14 +116,14 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 		} elseif ( $operation instanceof UpdateOperation ) {
 			$package = $operation->getTargetPackage();
 		} else {
-			throw new \Exception( 'Unknown operation: ' . \get_class( $operation ) );
+			throw new \Exception( 'Unknown operation: ' . \get_class( $operation ) ); // phpcs:ignore SlevomatCodingStandard.Classes.ModernClassNameReference.ClassNameReferencedViaFunctionCall -- Switch to $operation::class when PHP 8.0 is minimum.
 		}
 
 		if ( self::PLUGIN_PACKAGE_NAME !== $package->getName() ) {
 			return;
 		}
 
-		$source = dirname( __DIR__ ) . '/res/deploy.tpl.php';
+		$source = \dirname( __DIR__ ) . '/res/deploy.tpl.php';
 		$dest   = $this->rootDir . '/deploy.php';
 
 		$copied = copy( $source, $dest );

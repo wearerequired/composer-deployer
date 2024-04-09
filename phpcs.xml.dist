@@ -6,8 +6,18 @@
 
 	<rule ref="Required">
 		<exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
+		<exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped"/>
 	</rule>
 
+	<!-- The minimum supported WordPress version for all sniffs which use it. -->
+	<config name="minimum_supported_wp_version" value="6.3"/>
+	<!-- The minimum PHP requirement. -->
+	<config name="testVersion" value="7.4-"/>
+
+	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+		<exclude-pattern>/src/Plugin\.php</exclude-pattern>
+		<exclude-pattern>/res/deploy\.tpl\.php</exclude-pattern>
+	</rule>
 	<rule ref="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase">
 		<exclude-pattern>/src/Plugin\.php</exclude-pattern>
 	</rule>
@@ -20,7 +30,7 @@
 	<rule ref="Squiz.Commenting.FunctionCommentThrowTag.Missing">
 		<exclude-pattern>/src/Plugin\.php</exclude-pattern>
 	</rule>
-	<rule ref="WordPress.WP.CapitalPDangit.Misspelled">
+	<rule ref="WordPress.WP.CapitalPDangit.MisspelledInText">
 		<exclude-pattern>/res/deploy\.tpl\.php</exclude-pattern>
 	</rule>
 </ruleset>
