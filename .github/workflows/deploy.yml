@@ -93,7 +93,7 @@ jobs:
           env: ${{ env.ENVIRONMENT }}
 
       - name: Checkout project repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.1
         with:
           clean: false
           persist-credentials: false
