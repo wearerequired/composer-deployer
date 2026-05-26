@@ -6,10 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Reusable deploy workflow now accepts `production_branches`, `testing_branches`,
+  and `environment_urls` inputs so callers can map multiple branches to the same
+  environment tier (e.g. a second production branch deployed to its own host).
+  A branch listed in `production_branches` / `testing_branches` is deployed via
+  its matching Deployer host alias (`dep deploy <branch>`); other branches keep
+  the legacy `stage=staging` label selector.
+
 ### Changed
 - Update `deploy.php` template to support Deployer v7. v6 is no longer supported.  
   To migrate from v6 to v7 see [Deployer's upgrade documentation](https://deployer.org/docs/7.x/UPGRADE#upgrade-from-6x-to-7x).
 - Add [reusable workflow](./.github/workflows/deploy.yml) for GitHub which can be used for deployments.
+- Reusable deploy workflow no longer forces `--branch` on `dep deploy`; the branch
+  to deploy is taken from each host's `branch:` config in `deploy.yml`.
 
 ## [0.6.0] - 2021-11-02
 

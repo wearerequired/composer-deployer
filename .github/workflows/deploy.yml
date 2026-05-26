@@ -16,6 +16,29 @@ on:
         description: Relative path under $GITHUB_WORKSPACE to place the project repository.
         type: string
         default: ./project-repository
+      production_branches:
+        description: |
+          Newline-separated list of branches that map to a production environment.
+          Each listed branch is expected to match a Deployer host alias in `deploy.yml`.
+          Defaults to `production` for backwards compatibility.
+        type: string
+        default: production
+      testing_branches:
+        description: |
+          Newline-separated list of branches that map to a testing environment.
+          Each listed branch is expected to match a Deployer host alias in `deploy.yml`.
+          Defaults to `testing` for backwards compatibility.
+        type: string
+        default: testing
+      environment_urls:
+        description: |
+          Optional newline-separated `branch=url` pairs that override the deployment URL
+          for a given branch. If not set, falls back to `secrets.ENVIRONMENT_URL_PRODUCTION`,
+          `secrets.ENVIRONMENT_URL_TESTING`, or `secrets.ENVIRONMENT_URL` based on the
+          resolved environment (legacy behaviour). Values may reference secrets in the
+          caller workflow, e.g. `production-sg=${{ secrets.ENVIRONMENT_URL_PRODUCTION_SG }}`.
+        type: string
+        default: ''
 
 env:
   ENVIRONMENT_URL: ${{ secrets.ENVIRONMENT_URL }}
@@ -34,6 +57,13 @@ jobs:
 
     steps:
       - name: Set custom environment variables
+        env:
+          INPUT_PRODUCTION_BRANCHES: ${{ inputs.production_branches }}
+          INPUT_TESTING_BRANCHES: ${{ inputs.testing_branches }}
+          INPUT_ENVIRONMENT_URLS: ${{ inputs.environment_urls }}
+          SECRET_ENVIRONMENT_URL: ${{ secrets.ENVIRONMENT_URL }}
+          SECRET_ENVIRONMENT_URL_PRODUCTION: ${{ secrets.ENVIRONMENT_URL_PRODUCTION }}
+          SECRET_ENVIRONMENT_URL_TESTING: ${{ secrets.ENVIRONMENT_URL_TESTING }}
         run: |
           TIMESTAMP=$(date +'%s')
           BRANCH=${GITHUB_REF#refs/heads/}
@@ -41,17 +71,60 @@ jobs:
           CHECK_SUITE_URL=$(curl -s -H "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} | jq -r '.check_suite_url')
           CHECK_RUN_ID=$(curl -s -H "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.antiope-preview+json" $CHECK_SUITE_URL/check-runs | jq '.check_runs[] | select(.name|test("\/ Deploy$")) | .id ')
 
+          # Resolve target environment from configured branch lists.
+          # For branches listed in production_branches / testing_branches the
+          # branch name itself is used as Deployer selector (`dep deploy <branch>`).
+          # Everything else falls back to the staging tier (`stage=staging`).
+          ENVIRONMENT=staging
+          DEPLOYER_SELECTOR="stage=staging"
+
+          while IFS= read -r prod_branch; do
+            prod_branch=$(echo "$prod_branch" | xargs)
+            [ -z "$prod_branch" ] && continue
+            if [ "$BRANCH" = "$prod_branch" ]; then
+              ENVIRONMENT=production
+              DEPLOYER_SELECTOR="$BRANCH"
+              break
+            fi
+          done <<< "$INPUT_PRODUCTION_BRANCHES"
+
+          if [ "$ENVIRONMENT" = "staging" ]; then
+            while IFS= read -r test_branch; do
+              test_branch=$(echo "$test_branch" | xargs)
+              [ -z "$test_branch" ] && continue
+              if [ "$BRANCH" = "$test_branch" ]; then
+                ENVIRONMENT=testing
+                DEPLOYER_SELECTOR="$BRANCH"
+                break
+              fi
+            done <<< "$INPUT_TESTING_BRANCHES"
+          fi
+
+          # Resolve environment URL (default by tier, optional per-branch override).
+          case "$ENVIRONMENT" in
+            production) ENVIRONMENT_URL="$SECRET_ENVIRONMENT_URL_PRODUCTION" ;;
+            testing)    ENVIRONMENT_URL="$SECRET_ENVIRONMENT_URL_TESTING" ;;
+            *)          ENVIRONMENT_URL="$SECRET_ENVIRONMENT_URL" ;;
+          esac
+
+          while IFS= read -r line; do
+            line=$(echo "$line" | xargs)
+            [ -z "$line" ] && continue
+            key="${line%%=*}"
+            val="${line#*=}"
+            if [ "$key" = "$BRANCH" ]; then
+              ENVIRONMENT_URL="$val"
+              break
+            fi
+          done <<< "$INPUT_ENVIRONMENT_URLS"
+
           echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
           echo "SHA_SHORT=$SHA_SHORT" >> $GITHUB_ENV
           echo "CHECK_RUN_ID=$CHECK_RUN_ID" >> $GITHUB_ENV
-          if [ "$BRANCH" == "production" ]; then
-            echo "ENVIRONMENT=production" >> $GITHUB_ENV
-            echo "ENVIRONMENT_URL=${{ secrets.ENVIRONMENT_URL_PRODUCTION }}" >> $GITHUB_ENV
-          elif [ "$BRANCH" == "testing" ]; then
-              echo "ENVIRONMENT=testing" >> $GITHUB_ENV
-              echo "ENVIRONMENT_URL=${{ secrets.ENVIRONMENT_URL_TESTING }}" >> $GITHUB_ENV
-          fi;
+          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+          echo "ENVIRONMENT_URL=$ENVIRONMENT_URL" >> $GITHUB_ENV
+          echo "DEPLOYER_SELECTOR=$DEPLOYER_SELECTOR" >> $GITHUB_ENV
 
       - name: Send init Slack notification
         id: slack
@@ -174,9 +247,9 @@ jobs:
         working-directory: ${{ inputs.project_working_directory }}
         run: |
           if [ -n "${RUNNER_DEBUG+1}" ]; then
-            dep deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction -vvv
+            dep deploy "$DEPLOYER_SELECTOR" --no-interaction -vvv
           else
-            dep deploy stage=$ENVIRONMENT --branch $BRANCH --no-interaction
+            dep deploy "$DEPLOYER_SELECTOR" --no-interaction
           fi
 
       - name: Unlock Deployer
@@ -185,9 +258,9 @@ jobs:
         run: |
           if hash dep 2>/dev/null; then
             if [ -n "${RUNNER_DEBUG+1}" ]; then
-              dep deploy:unlock stage=$ENVIRONMENT --no-interaction -vvv
+              dep deploy:unlock "$DEPLOYER_SELECTOR" --no-interaction -vvv
             else
-              dep deploy:unlock stage=$ENVIRONMENT --no-interaction
+              dep deploy:unlock "$DEPLOYER_SELECTOR" --no-interaction
             fi
           fi
 
