@@ -25,6 +25,80 @@ composer require wearerequired/composer-deployer
 * Runs custom commands via `post_rollout_commands` option before the deployment is finished.
 * Provides a [reusable workflow for GitHub](./.github/workflows/deploy.yml) for deployment.
 
+### Reusable deploy workflow
+
+The reusable workflow at [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)
+maps the pushed branch to an environment tier (`staging`/`testing`/`production`),
+selects matching Deployer hosts, and reports the deployment back to GitHub and Slack.
+
+How the Deployer host selector is chosen:
+
+- For branches listed in `production_branches` / `testing_branches`, the branch
+  name itself is used as the selector: `dep deploy <branch>`. Deployer 7 matches
+  this against host aliases and label values, so the inventory has to define a
+  matching host (alias `production-sg`, label `branch=production-sg`, etc.).
+- Everything else falls back to the staging tier (`dep deploy stage=staging`),
+  which can match multiple hosts via the `stage` label.
+
+The deployed branch is taken from each host's `branch:` configuration in
+`deploy.yml` — `--branch` is not forced from the workflow side.
+
+Environment URLs are resolved in this order:
+
+1. `environment_urls` input (per-branch override).
+2. Repository variable matching the tier (`vars.ENVIRONMENT_URL_PRODUCTION`,
+   `vars.ENVIRONMENT_URL_TESTING`, or `vars.ENVIRONMENT_URL` for staging).
+3. Secret with the same name (`secrets.ENVIRONMENT_URL_PRODUCTION`, etc.) —
+   legacy fallback.
+
+#### Minimal caller
+
+```yml
+jobs:
+  deploy:
+    uses: wearerequired/composer-deployer/.github/workflows/deploy.yml@v1
+    secrets: inherit
+```
+
+#### Two production branches targeting separate hosts
+
+`deploy.yml` (host config — branch and stage label per host):
+
+```yml
+hosts:
+  production:
+    branch: production
+    labels:
+      stage: production
+  production-sg:
+    branch: production-sg
+    labels:
+      stage: production
+```
+
+Caller workflow:
+
+```yml
+jobs:
+  deploy:
+    uses: wearerequired/composer-deployer/.github/workflows/deploy.yml@v1
+    with:
+      production_branches: |
+        production
+        production-sg
+      environment_urls: |
+        production-sg=${{ vars.ENVIRONMENT_URL_PRODUCTION_SG }}
+    secrets: inherit
+```
+
+The `production` URL comes from `vars.ENVIRONMENT_URL_PRODUCTION` (or the legacy
+`secrets.ENVIRONMENT_URL_PRODUCTION`) automatically. Only the additional
+`production-sg` URL needs to be passed via `environment_urls`, because secret /
+variable names cannot be looked up dynamically.
+
+Local deploys via `dep deploy stage=production` still target both hosts at
+once, because the `stage` label is shared.
+
 ## Configuration
 
 Next to `deploy.php` you should create a `deploy.yml` file in the project root directory. For the supported syntax see [Deployer's documentation](https://deployer.org/docs/7.x/yaml) or the following example:
