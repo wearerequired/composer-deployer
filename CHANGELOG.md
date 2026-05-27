@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add [reusable workflow](./.github/workflows/deploy.yml) for GitHub which can be used for deployments.
 - Reusable deploy workflow no longer forces `--branch` on `dep deploy`; the branch
   to deploy is taken from each host's `branch:` config in `deploy.yml`.
+- Reusable deploy workflow now also reads environment URLs from repository
+  variables (`vars.ENVIRONMENT_URL_PRODUCTION` etc.) and falls back to the
+  equally named secret. Per-branch `environment_urls` overrides still win.
 
 ## [0.6.0] - 2021-11-02
 

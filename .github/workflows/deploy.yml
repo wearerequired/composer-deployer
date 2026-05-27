@@ -41,7 +41,7 @@ on:
         default: ''
 
 env:
-  ENVIRONMENT_URL: ${{ secrets.ENVIRONMENT_URL }}
+  ENVIRONMENT_URL: ${{ vars.ENVIRONMENT_URL || secrets.ENVIRONMENT_URL }}
   ENVIRONMENT: staging
 
 jobs:
@@ -61,6 +61,9 @@ jobs:
           INPUT_PRODUCTION_BRANCHES: ${{ inputs.production_branches }}
           INPUT_TESTING_BRANCHES: ${{ inputs.testing_branches }}
           INPUT_ENVIRONMENT_URLS: ${{ inputs.environment_urls }}
+          VAR_ENVIRONMENT_URL: ${{ vars.ENVIRONMENT_URL }}
+          VAR_ENVIRONMENT_URL_PRODUCTION: ${{ vars.ENVIRONMENT_URL_PRODUCTION }}
+          VAR_ENVIRONMENT_URL_TESTING: ${{ vars.ENVIRONMENT_URL_TESTING }}
           SECRET_ENVIRONMENT_URL: ${{ secrets.ENVIRONMENT_URL }}
           SECRET_ENVIRONMENT_URL_PRODUCTION: ${{ secrets.ENVIRONMENT_URL_PRODUCTION }}
           SECRET_ENVIRONMENT_URL_TESTING: ${{ secrets.ENVIRONMENT_URL_TESTING }}
@@ -100,11 +103,11 @@ jobs:
             done <<< "$INPUT_TESTING_BRANCHES"
           fi
 
-          # Resolve environment URL (default by tier, optional per-branch override).
+          # Resolve environment URL: per-branch override > repo variable > secret.
           case "$ENVIRONMENT" in
-            production) ENVIRONMENT_URL="$SECRET_ENVIRONMENT_URL_PRODUCTION" ;;
-            testing)    ENVIRONMENT_URL="$SECRET_ENVIRONMENT_URL_TESTING" ;;
-            *)          ENVIRONMENT_URL="$SECRET_ENVIRONMENT_URL" ;;
+            production) ENVIRONMENT_URL="${VAR_ENVIRONMENT_URL_PRODUCTION:-$SECRET_ENVIRONMENT_URL_PRODUCTION}" ;;
+            testing)    ENVIRONMENT_URL="${VAR_ENVIRONMENT_URL_TESTING:-$SECRET_ENVIRONMENT_URL_TESTING}" ;;
+            *)          ENVIRONMENT_URL="${VAR_ENVIRONMENT_URL:-$SECRET_ENVIRONMENT_URL}" ;;
           esac
 
           while IFS= read -r line; do

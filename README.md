@@ -43,6 +43,14 @@ How the Deployer host selector is chosen:
 The deployed branch is taken from each host's `branch:` configuration in
 `deploy.yml` — `--branch` is not forced from the workflow side.
 
+Environment URLs are resolved in this order:
+
+1. `environment_urls` input (per-branch override).
+2. Repository variable matching the tier (`vars.ENVIRONMENT_URL_PRODUCTION`,
+   `vars.ENVIRONMENT_URL_TESTING`, or `vars.ENVIRONMENT_URL` for staging).
+3. Secret with the same name (`secrets.ENVIRONMENT_URL_PRODUCTION`, etc.) —
+   legacy fallback.
+
 #### Minimal caller
 
 ```yml
@@ -79,10 +87,14 @@ jobs:
         production
         production-sg
       environment_urls: |
-        production=${{ secrets.ENVIRONMENT_URL_PRODUCTION }}
-        production-sg=${{ secrets.ENVIRONMENT_URL_PRODUCTION_SG }}
+        production-sg=${{ vars.ENVIRONMENT_URL_PRODUCTION_SG }}
     secrets: inherit
 ```
+
+The `production` URL comes from `vars.ENVIRONMENT_URL_PRODUCTION` (or the legacy
+`secrets.ENVIRONMENT_URL_PRODUCTION`) automatically. Only the additional
+`production-sg` URL needs to be passed via `environment_urls`, because secret /
+variable names cannot be looked up dynamically.
 
 Local deploys via `dep deploy stage=production` still target both hosts at
 once, because the `stage` label is shared.
