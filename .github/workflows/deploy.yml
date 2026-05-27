@@ -36,9 +36,8 @@ on:
           for a given branch. If not set, falls back to `vars.ENVIRONMENT_URL_PRODUCTION`,
           `vars.ENVIRONMENT_URL_TESTING`, or `vars.ENVIRONMENT_URL` (and the equally named
           secrets as legacy fallback) based on the resolved environment. Values may
-          reference repository variables in the caller workflow, e.g.
-          `production-sg=${{ vars.ENVIRONMENT_URL_PRODUCTION_SG }}`. GitHub does not allow
-          `${{ secrets.* }}` inside `with:`; use `vars.*` or a literal URL instead.
+          reference repository variables (`vars.*`) or be plain URLs in the caller
+          workflow. GitHub does not allow `secrets.*` inside the caller's `with:` block.
         type: string
         default: ''
 
