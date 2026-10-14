@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2023-01-31
+
 ### Changed
 - Update `deploy.php` template to support Deployer v7. v6 is no longer supported.  
   To migrate from v6 to v7 see [Deployer's upgrade documentation](https://deployer.org/docs/7.x/UPGRADE#upgrade-from-6x-to-7x).
@@ -73,7 +75,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - The initial version of this composer plugin.
 
-[Unreleased]: https://github.com/wearerequired/composer-deployer/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/wearerequired/composer-deployer/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/wearerequired/composer-deployer/compare/0.6.0...1.0.0
 [0.6.0]: https://github.com/wearerequired/composer-deployer/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/wearerequired/composer-deployer/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/wearerequired/composer-deployer/compare/0.3.2...0.4.0
