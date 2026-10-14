@@ -23,6 +23,7 @@ composer require wearerequired/composer-deployer
 * Clears OPcache via WP-CLI (requires [WP-CLI Clear OPcache](https://github.com/wearerequired/wp-cli-clear-opcache)). Can be disabled via `wp_clear_opcache` option.
 * Runs WordPress database routine if `wordpress` option is set.
 * Runs custom commands via `post_rollout_commands` option before the deployment is finished.
+* Syncs cron jobs to the remote crontab if `crontab:jobs` option is set (requires Deployer 7.4+). See [Cron jobs](#cron-jobs).
 * Provides a [reusable workflow for GitHub](./.github/workflows/deploy.yml) for deployment.
 
 ## Configuration
@@ -64,6 +65,34 @@ hosts:
     labels:
       stage: production
 ```
+
+### Cron jobs
+
+Cron jobs can be managed in `deploy.yml` instead of the hosting control panel. On every deployment the `wp:crontab` task writes the jobs of the deployed host into the remote user's crontab, using Deployer's [crontab recipe](https://deployer.org/docs/7.x/contrib/crontab). Placeholders like `{{bin/php}}`, `{{bin/wp}}` and `{{current_path}}` are resolved, so the crontab always uses the same PHP binary as the deployment.
+
+```yml
+hosts:
+  production:
+    <<: *base
+    branch: production
+    crontab:jobs:
+      - '*/5 * * * * cd {{current_path}} && {{bin/wp}} cron event run --due-now --quiet'
+    labels:
+      stage: production
+```
+
+The jobs are written into a section delimited by `###< {{application}}-{{stage}}` and `###> {{application}}-{{stage}}`. Only this section is replaced, all other lines of the crontab are kept. Because the identifier contains the stage, multiple stages can share the same SSH user. Override `crontab:identifier` to change it.
+
+> [!IMPORTANT]
+> * Requires Deployer 7.4 or newer. Older versions fail the deployment if `crontab:jobs` is set.
+> * Jobs are only written for hosts that define `crontab:jobs`. Defining them on `production` only leaves `staging` without cron jobs.
+> * Jobs must not contain single quotes, use double quotes instead.
+> * `%` must be escaped as `\%` because cron treats it as a newline.
+> * Manual changes inside the managed section are overwritten on the next deployment.
+> * Removing `crontab:jobs` from a host does not remove its section. Remove it manually via `crontab -e`.
+> * `dep rollback` does not sync the crontab.
+
+When migrating an existing project, remove the hand-made entries in the control panel after the first deployment with `crontab:jobs`. Only lines identical to a configured job (after placeholders are resolved) are moved into the section automatically.
 
 <br>
 
