@@ -9,6 +9,12 @@
 namespace Deployer;
 
 require 'recipe/common.php';
+require 'contrib/crontab.php';
+
+// The crontab recipe before Deployer 7.4 rewrites the whole crontab (7.0 - 7.3.1) or
+// drops jobs when adding the section (7.3.2 - 7.3.3). `crontab:use_sudo` was added
+// together with the fix in 7.4.0, so it doubles as feature detection.
+$crontab_supported = has( 'crontab:use_sudo' );
 
 // Default options.
 set(
@@ -38,6 +44,12 @@ set(
 
 		throw new \Deployer\Exception\ConfigurationException( 'Please specify `labels.stage`.' );
 	}
+);
+// Stages usually share one SSH user and therefore one crontab. Without a per-stage
+// identifier, deploying staging would replace the production jobs.
+set(
+	'crontab:identifier',
+	fn(): string => get( 'application' ) . '-' . get( 'stage' )
 );
 
 // Load options and hosts from inventory.
@@ -183,6 +195,31 @@ task(
 	}
 );
 
+desc( 'Sync crontab jobs' );
+task(
+	'wp:crontab',
+	function () use ( $crontab_supported ): void {
+		if ( ! has( 'crontab:jobs' ) ) {
+			return;
+		}
+
+		// Fail loudly instead of letting an old recipe silently mangle the crontab.
+		if ( ! $crontab_supported ) {
+			throw new \Deployer\Exception\ConfigurationException( '`crontab:jobs` requires Deployer 7.4 or newer.' );
+		}
+
+		// Deployer 7.x writes each line wrapped in single quotes, so a quote inside a job
+		// would silently be stripped by the shell.
+		foreach ( get( 'crontab:jobs' ) as $job ) {
+			if ( false !== strpos( $job, "'" ) ) {
+				throw new \Deployer\Exception\ConfigurationException( "`crontab:jobs` must not contain single quotes: {$job}" );
+			}
+		}
+
+		invoke( 'crontab:sync' );
+	}
+);
+
 desc( 'Deploy your project' );
 task(
 	'deploy',
@@ -196,6 +233,7 @@ task(
 		'wp:opcache_clear',
 		'wp:upgrade_db',
 		'wp:post_rollout',
+		'wp:crontab',
 		'deploy:unlock',
 		'deploy:cleanup',
 		'deploy:success',
