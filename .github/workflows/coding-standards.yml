@@ -19,11 +19,11 @@ jobs:
     steps:
       - name: Check out repository (push)
         if: ${{ github.event_name == 'push' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check out repository (pull_request_target)
         if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
@@ -41,7 +41,7 @@ jobs:
         run: echo "${PWD}/vendor/bin" >> $GITHUB_PATH
 
       - name: Run linters
-        uses: wearerequired/lint-action@v2
+        uses: wearerequired/lint-action@v3
         with:
           continue_on_error: false
           php_codesniffer: true
