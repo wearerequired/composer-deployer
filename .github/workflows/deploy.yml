@@ -55,7 +55,7 @@ jobs:
 
       - name: Send init Slack notification
         id: slack
-        uses: wearerequired/slack-messaging-action@b8d341605efb42cb7ca093a88faaffee59176928 # v3.0.0
+        uses: wearerequired/slack-messaging-action@4e112002584ab9c2fb24da13262a138fe0c88afe # v4.0.0
         with:
           bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
           channel: ${{ secrets.SLACK_CHANNEL }}
@@ -129,7 +129,7 @@ jobs:
         run: echo "TIMESTAMP=$(date +'%s')" >> $GITHUB_ENV
 
       - name: Send start Slack notification
-        uses: wearerequired/slack-messaging-action@b8d341605efb42cb7ca093a88faaffee59176928 # v3.0.0
+        uses: wearerequired/slack-messaging-action@4e112002584ab9c2fb24da13262a138fe0c88afe # v4.0.0
         with:
           bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
           channel: ${{ secrets.SLACK_CHANNEL }}
@@ -197,7 +197,7 @@ jobs:
 
       - name: Send success Slack notification
         if: ${{ success() }}
-        uses: wearerequired/slack-messaging-action@b8d341605efb42cb7ca093a88faaffee59176928 # v3.0.0
+        uses: wearerequired/slack-messaging-action@4e112002584ab9c2fb24da13262a138fe0c88afe # v4.0.0
         with:
           bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
           channel: ${{ secrets.SLACK_CHANNEL }}
@@ -240,7 +240,7 @@ jobs:
 
       - name: Send failure Slack notification
         if: ${{ failure() }}
-        uses: wearerequired/slack-messaging-action@b8d341605efb42cb7ca093a88faaffee59176928 # v3.0.0
+        uses: wearerequired/slack-messaging-action@4e112002584ab9c2fb24da13262a138fe0c88afe # v4.0.0
         with:
           bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
           channel: ${{ secrets.SLACK_CHANNEL }}
@@ -283,7 +283,7 @@ jobs:
 
       - name: Send cancelled Slack notification
         if: ${{ cancelled() }}
-        uses: wearerequired/slack-messaging-action@b8d341605efb42cb7ca093a88faaffee59176928 # v3.0.0
+        uses: wearerequired/slack-messaging-action@4e112002584ab9c2fb24da13262a138fe0c88afe # v4.0.0
         with:
           bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
           channel: ${{ secrets.SLACK_CHANNEL }}
