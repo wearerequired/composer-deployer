@@ -86,7 +86,7 @@ The jobs are written into a section delimited by `###< {{application}}-{{stage}}
 > [!IMPORTANT]
 > * Requires Deployer 7.4 or newer. Older versions fail the deployment if `crontab:jobs` is set.
 > * Jobs are only written for hosts that define `crontab:jobs`. Defining them on `production` only leaves `staging` without cron jobs.
-> * Jobs must not contain single quotes, use double quotes instead.
+> * With Deployer 7, no crontab line may contain single quotes, including lines that already exist on the server. Deployer 7 writes every line wrapped in single quotes, so a quote inside a line lets the shell interpret the rest of it, e.g. as a separate command. The deployment fails before the new release goes live if such a line is found, and a standalone `dep wp:crontab` refuses to sync. Use double quotes instead. Deployer 8 escapes the lines and has no such restriction.
 > * `%` must be escaped as `\%` because cron treats it as a newline.
 > * Manual changes inside the managed section are overwritten on the next deployment.
 > * Removing `crontab:jobs` from a host does not remove its section. Remove it manually via `crontab -e`.

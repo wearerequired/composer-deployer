@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add `wp:crontab` task and `crontab:jobs` option to sync cron jobs via Deployer's crontab recipe. Requires Deployer 7.4 or newer.
+- Add `wp:crontab:check` task which runs at the start of `deploy` and fails the deployment before the new release goes live if the crontab cannot be synced safely: Deployer older than 7.4, or, with Deployer 7, a single quote in any crontab line including existing ones on the server.
 
 ## [1.0.0] - 2023-01-31
 

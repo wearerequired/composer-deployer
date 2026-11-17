@@ -195,9 +195,9 @@ task(
 	}
 );
 
-desc( 'Sync crontab jobs' );
+desc( 'Check that the crontab can be synced safely' );
 task(
-	'wp:crontab',
+	'wp:crontab:check',
 	function () use ( $crontab_supported ): void {
 		if ( ! has( 'crontab:jobs' ) ) {
 			return;
@@ -208,14 +208,38 @@ task(
 			throw new \Deployer\Exception\ConfigurationException( '`crontab:jobs` requires Deployer 7.4 or newer.' );
 		}
 
-		// Deployer 7.x writes each line wrapped in single quotes, so a quote inside a job
-		// would silently be stripped by the shell.
-		foreach ( get( 'crontab:jobs' ) as $job ) {
-			if ( false !== strpos( $job, "'" ) ) {
-				throw new \Deployer\Exception\ConfigurationException( "`crontab:jobs` must not contain single quotes: {$job}" );
-			}
+		// Deployer 8 escapes every line with quote(), so only 7.x needs the check below.
+		if ( \function_exists( 'Deployer\quote' ) ) {
+			return;
 		}
 
+		// Deployer 7.x rewrites every crontab line, including unrelated ones already on
+		// the server, as `echo '<line>'`. A single quote ends the quoting and the shell
+		// interprets the rest of the line, e.g. `&` would start a separate command.
+		// Jobs are checked after parsing, as a placeholder may resolve to a quote.
+		$lines = array_merge(
+			array_map( 'Deployer\parse', get( 'crontab:jobs' ) ),
+			getRemoteCrontab()
+		);
+		foreach ( $lines as $line ) {
+			if ( false !== strpos( $line, "'" ) ) {
+				throw new \Deployer\Exception\ConfigurationException( "With Deployer 7, crontab lines must not contain single quotes: {$line}" );
+			}
+		}
+	}
+);
+
+desc( 'Sync crontab jobs' );
+task(
+	'wp:crontab',
+	function (): void {
+		if ( ! has( 'crontab:jobs' ) ) {
+			return;
+		}
+
+		// Keeps a standalone `dep wp:crontab` safe. During `deploy` the check already ran
+		// as the first step, so this only costs one extra `crontab -l`.
+		invoke( 'wp:crontab:check' );
 		invoke( 'crontab:sync' );
 	}
 );
@@ -224,6 +248,8 @@ desc( 'Deploy your project' );
 task(
 	'deploy',
 	[
+		// Checks run before the new release goes live, so a failure leaves it untouched.
+		'wp:crontab:check',
 		'deploy:prepare',
 		'deploy:vendors',
 		'wp:install',
